@@ -57,7 +57,7 @@
   /* ---------- TITLE ---------- */
   #title{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 24px;position:relative;overflow:hidden}
   /* casa de fondo en la portada */
-  #titleBg{position:absolute;inset:0;z-index:0;background-image:url("images/casa.png");background-size:cover;background-position:center;
+  #titleBg{position:absolute;inset:0;z-index:0;background-image:url("../images/casa.png");background-size:cover;background-position:center;
     filter:saturate(.6) contrast(1.05) brightness(.5);transform:scale(1.08);animation:bgdrift 40s ease-in-out infinite alternate}
   @keyframes bgdrift{from{transform:scale(1.08) translateY(0)}to{transform:scale(1.14) translateY(-14px)}}
   #titleBg::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 90% at 50% 30%, rgba(7,9,13,.35) 0%, rgba(7,9,13,.78) 70%, var(--void) 100%)}
@@ -276,7 +276,7 @@
   <div class="fog"><span></span><span></span><span></span></div>
   <canvas id="feathers"></canvas>
   <div id="bloodTitle"></div>
-  <img id="almohadonTitle" src="images/almohadon.png" alt="" onerror="this.remove()">
+  <img id="almohadonTitle" src="../images/almohadon.png" alt="" onerror="this.remove()">
   <span class="kicker">Escape Room de Comprensión Lectora</span>
   <h1 class="maintitle">El Almohadón<br>de Plumas</h1>
   <p class="byline">de <b>Horacio Quiroga</b> · 1907</p>
@@ -362,18 +362,18 @@ const ARTSVG = {
 };
 
 /* Mapa de fotos: si el archivo existe en /images se muestra; si no, cae al SVG.
-   Reemplazá o agregá archivos en la carpeta images/ con estos nombres. */
+   Reemplazá o agregá archivos en la carpeta ../images/ con estos nombres. */
 const IMGFILES = {
-  pareja:"images/pareja.png",
-  casa:"images/casa.png",
-  silencio:"images/jordan.png",
-  jordan:"images/jordan.png",
-  alicia:"images/alicia.png",
-  medico:"images/medico.png",
-  dormitorio:"images/dormitorio.png",
-  descubrimiento:"images/parasito.png",
-  jardin:"images/jardin.png",
-  almohadon:"images/almohadon.png",
+  pareja:"../images/pareja.png",
+  casa:"../images/casa.png",
+  silencio:"../images/jordan.png",
+  jordan:"../images/jordan.png",
+  alicia:"../images/alicia.png",
+  medico:"../images/medico.png",
+  dormitorio:"../images/dormitorio.png",
+  descubrimiento:"../images/parasito.png",
+  jardin:"../images/jardin.png",
+  almohadon:"../images/almohadon.png",
 };
 let _artId=0;
 function artHTML(key){
