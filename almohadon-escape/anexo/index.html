@@ -1,0 +1,217 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anexo · De estático a adaptativo — Escape Room "El almohadón de plumas"</title>
+<style>
+  :root{
+    --esm:#10B981; --esm-dark:#0d4f4a; --esm-deep:#117a5f;
+    --ink:#16231e; --paper:#f7faf8; --line:#cde9e0;
+    --literal:#3b82c4; --infer:#b5732e;
+    --card:#ffffff; --shadow:0 6px 22px rgba(13,79,74,.08);
+    --code-bg:#0d1f1b;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Segoe UI','Open Sans',system-ui,sans-serif;
+    background:linear-gradient(160deg,#eef7f3 0%,#f7faf8 40%);
+    color:var(--ink); line-height:1.6; padding:0 0 60px;
+  }
+  .wrap{max-width:940px;margin:0 auto;padding:0 22px}
+
+  header{
+    background:linear-gradient(135deg,var(--esm-dark),var(--esm-deep));
+    color:#fff; padding:42px 0 38px; margin-bottom:34px;
+    box-shadow:0 4px 18px rgba(13,79,74,.18);
+  }
+  .kicker{font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:#a7e8d0;font-weight:600;margin-bottom:10px}
+  header h1{font-size:1.85rem;line-height:1.2;font-weight:700;margin-bottom:8px}
+  header p{color:#d4f3e7;font-size:.98rem;max-width:660px}
+  .meta{margin-top:16px;font-size:.82rem;color:#8fdcc1;font-weight:600}
+
+  .section-title{
+    font-size:1.25rem;color:var(--esm-dark);font-weight:700;
+    margin:40px 0 6px;display:flex;align-items:center;gap:10px;
+  }
+  .section-title::before{content:"";width:6px;height:24px;background:var(--esm);border-radius:3px;display:inline-block}
+  .section-sub{color:#5b6f68;font-size:.92rem;margin-bottom:22px;max-width:680px}
+
+  .versus{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:center;margin-bottom:10px}
+  @media(max-width:680px){.versus{grid-template-columns:1fr}}
+  .vcard{background:var(--card);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow);border:1px solid #e4f1ec}
+  .vcard.v-old{border-top:4px solid #c0c8c4}
+  .vcard.v-new{border-top:4px solid var(--esm)}
+  .vtag{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;font-weight:700;margin-bottom:8px}
+  .v-old .vtag{color:#8a948f}
+  .v-new .vtag{color:var(--esm-deep)}
+  .vcard h3{font-size:1.05rem;color:var(--ink);margin-bottom:6px}
+  .vcard p{font-size:.88rem;color:#46554f}
+  .vbranch{font-family:'SF Mono',Consolas,monospace;font-size:.74rem;color:#7a8a84;margin-top:8px}
+  .vs-mid{font-weight:800;color:var(--esm);font-size:1.1rem;text-align:center}
+  @media(max-width:680px){.vs-mid{display:none}}
+
+  .flow{background:var(--card);border-radius:16px;padding:28px 24px;box-shadow:var(--shadow);border:1px solid #e4f1ec;margin-bottom:12px}
+  .flow svg{width:100%;height:auto;max-width:760px;display:block;margin:0 auto}
+
+  .mech{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:680px){.mech{grid-template-columns:1fr}}
+  .mcard{background:var(--card);border-radius:14px;padding:20px;box-shadow:var(--shadow);border:1px solid #e4f1ec}
+  .mcard.hit{border-left:4px solid var(--esm)}
+  .mcard.miss{border-left:4px solid var(--literal)}
+  .mhead{display:flex;align-items:center;gap:9px;margin-bottom:10px;font-weight:700;font-size:1rem}
+  .mcard.hit .mhead{color:var(--esm-deep)}
+  .mcard.miss .mhead{color:#2c6395}
+  .micon{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:.95rem;font-weight:800}
+  .mcard.hit .micon{background:var(--esm)}
+  .mcard.miss .micon{background:var(--literal)}
+  .mcard p{font-size:.88rem;color:#46554f}
+  .mcard .pill{display:inline-block;font-size:.72rem;font-weight:700;padding:3px 9px;border-radius:20px;margin-top:8px}
+  .pill.lit{background:rgba(59,130,196,.12);color:var(--literal)}
+  .pill.inf{background:rgba(181,115,46,.13);color:var(--infer)}
+
+  .diff{background:var(--code-bg);border-radius:14px;padding:20px 22px;box-shadow:var(--shadow);overflow-x:auto;margin-bottom:8px}
+  .diff pre{font-family:'SF Mono',Consolas,'Courier New',monospace;font-size:.8rem;line-height:1.65;color:#cfe6dd;white-space:pre}
+  .diff .add{color:#7fe3b8;display:block}
+  .diff .ctx{color:#7a9088;display:block}
+  .diff .cmt{color:#5f8a7c;font-style:italic;display:block}
+  .diff-cap{font-size:.78rem;color:#7a8a84;margin-bottom:18px;text-align:center}
+
+  .sim{background:var(--card);border-radius:14px;padding:22px;box-shadow:var(--shadow);border:1px solid #e4f1ec}
+  .sim h4{font-size:.92rem;color:var(--esm-dark);margin-bottom:12px}
+  .trace{font-family:'SF Mono',Consolas,monospace;font-size:.82rem;line-height:1.9}
+  .trace .row{display:flex;align-items:center;gap:10px;padding:4px 0;border-bottom:1px solid #f0f5f2;flex-wrap:wrap}
+  .trace .row:last-child{border-bottom:none}
+  .trace .lvl{font-weight:700;padding:1px 8px;border-radius:14px;font-size:.74rem;min-width:78px;text-align:center}
+  .trace .lvl.lit{background:rgba(59,130,196,.13);color:var(--literal)}
+  .trace .lvl.inf{background:rgba(181,115,46,.14);color:var(--infer)}
+  .trace .res.ok{color:var(--esm-deep);font-weight:600}
+  .trace .res.no{color:#c0612a;font-weight:600}
+
+  footer{text-align:center;margin-top:44px;padding-top:22px;border-top:1px solid var(--line);color:#7a8a84;font-size:.8rem}
+  footer a{color:var(--esm-deep);text-decoration:none;font-weight:600}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="kicker">Anexo visual · Actividad Obligatoria 2</div>
+    <h1>De estático a adaptativo: mejorando el Escape Room con IA</h1>
+    <p>Cómo usé inteligencia artificial para transformar la Actividad 2 —el Escape Room sobre <em>El almohadón de plumas</em> de Quiroga— en una experiencia que ramifica según el desempeño lector de cada grupo.</p>
+    <div class="meta">María Mercedes Recalde · Nuevas Tecnologías Educativas I · Universidad CAECE</div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="section-title">Dos versiones, una al lado de la otra</div>
+  <p class="section-sub">La mejora no reemplazó la actividad original: la dejé en una rama de desarrollo aparte para poder mostrar ambas funcionando y comparar la diferencia.</p>
+
+  <div class="versus">
+    <div class="vcard v-old">
+      <div class="vtag">● Versión original</div>
+      <h3>Enigmas fijos</h3>
+      <p>Todos los grupos reciben las mismas preguntas, en el mismo orden, sin importar cómo vienen leyendo. La dificultad la fija el diseño, no el estudiante.</p>
+      <div class="vbranch">rama: main</div>
+    </div>
+    <div class="vs-mid">→</div>
+    <div class="vcard v-new">
+      <div class="vtag">▸ Versión mejorada con IA</div>
+      <h3>Ramificación adaptativa</h3>
+      <p>El juego sirve un enigma por vez y ajusta el nivel en tiempo real: sube a inferencia si aciertan, baja a literal con andamiaje si erran.</p>
+      <div class="vbranch">rama: adaptativo</div>
+    </div>
+  </div>
+
+  <div class="section-title">La mecánica de la ramificación</div>
+  <p class="section-sub">El corazón de la mejora: una regla pedagógica simple que convierte el desempeño del grupo en el motor de la dificultad. Zona de Desarrollo Próximo hecha mecánica de juego.</p>
+
+  <div class="flow">
+    <svg viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,sans-serif">
+      <rect x="300" y="20" width="160" height="46" rx="10" fill="#0d4f4a"/>
+      <text x="380" y="42" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">Enigma servido</text>
+      <text x="380" y="58" text-anchor="middle" fill="#a7e8d0" font-size="10">según nivel actual</text>
+      <line x1="380" y1="66" x2="380" y2="98" stroke="#9bb5ad" stroke-width="2"/>
+      <polygon points="380,104 375,94 385,94" fill="#9bb5ad"/>
+      <polygon points="380,108 440,150 380,192 320,150" fill="#fff" stroke="#10B981" stroke-width="2"/>
+      <text x="380" y="148" text-anchor="middle" fill="#0d4f4a" font-size="12" font-weight="700">¿Responde</text>
+      <text x="380" y="163" text-anchor="middle" fill="#0d4f4a" font-size="12" font-weight="700">bien?</text>
+      <line x1="440" y1="150" x2="560" y2="150" stroke="#10B981" stroke-width="2"/>
+      <polygon points="566,150 556,145 556,155" fill="#10B981"/>
+      <text x="500" y="142" text-anchor="middle" fill="#0d7a5b" font-size="11" font-weight="700">SÍ</text>
+      <rect x="566" y="126" width="172" height="48" rx="10" fill="#10B981" fill-opacity="0.16" stroke="#10B981" stroke-width="1.5"/>
+      <text x="652" y="146" text-anchor="middle" fill="#0d7a5b" font-size="11.5" font-weight="700">Sube a inferencia</text>
+      <text x="652" y="162" text-anchor="middle" fill="#117a5f" font-size="9.5">desafío más exigente</text>
+      <line x1="320" y1="150" x2="200" y2="150" stroke="#3b82c4" stroke-width="2"/>
+      <polygon points="194,150 204,145 204,155" fill="#3b82c4"/>
+      <text x="260" y="142" text-anchor="middle" fill="#2c6395" font-size="11" font-weight="700">NO</text>
+      <rect x="22" y="126" width="172" height="48" rx="10" fill="#3b82c4" fill-opacity="0.14" stroke="#3b82c4" stroke-width="1.5"/>
+      <text x="108" y="143" text-anchor="middle" fill="#2c6395" font-size="11.5" font-weight="700">Baja a literal</text>
+      <text x="108" y="159" text-anchor="middle" fill="#3b6e9c" font-size="9.5">+ pista de andamiaje</text>
+      <path d="M652 174 Q652 240 380 240 Q108 240 108 174" fill="none" stroke="#9bb5ad" stroke-width="1.6" stroke-dasharray="5 5"/>
+      <text x="380" y="262" text-anchor="middle" fill="#7a8a84" font-size="10.5" font-style="italic">vuelve a servir el siguiente enigma, ya con el nivel ajustado</text>
+      <text x="380" y="288" text-anchor="middle" fill="#0d4f4a" font-size="10.5" font-weight="600">La sala se abre cuando el grupo resuelve todos sus enigmas — por el camino que su lectura dibuje</text>
+    </svg>
+  </div>
+
+  <div class="section-title">Qué pasa en cada respuesta</div>
+  <div class="mech">
+    <div class="mcard hit">
+      <div class="mhead"><span class="micon">✓</span> Si el grupo acierta</div>
+      <p>Se valida la respuesta, aparece el feedback que interpreta a Quiroga, y el sistema eleva el nivel. El próximo enigma exigirá inferir, no solo rastrear datos.</p>
+      <span class="pill inf">◆ Próximo: Inferencia / Empatía</span>
+    </div>
+    <div class="mcard miss">
+      <div class="mhead"><span class="micon">↓</span> Si el grupo erra</div>
+      <p>En lugar de un "incorrecto" seco, el sistema baja el nivel y ofrece una pista anclada a la frase exacta del cuento: los reorienta a volver al texto antes de inferir.</p>
+      <span class="pill lit">● Próximo: Comprensión literal + pista</span>
+    </div>
+  </div>
+
+  <div class="section-title">El cambio, en el código real</div>
+  <p class="section-sub">El fragmento que convierte una respuesta en una decisión de nivel. La lógica nueva sumó alrededor de 100 líneas sin tocar lo que ya funcionaba: cerraduras, dossier de personajes y ambiente sonoro quedaron intactos.</p>
+
+  <div class="diff">
+<pre><span class="cmt">// ACIERTO  =&gt; sube el nivel hacia inferencial</span>
+<span class="add">+   if(oi===ch.correct){</span>
+<span class="add">+     solved.add(ci); sfx('ok');</span>
+<span class="add">+     ad.level = 'infer';                       // sube</span>
+<span class="add">+     setTimeout(()=&gt;serveNextChallenge(roomId), 1100);</span>
+<span class="ctx">  } else {</span>
+<span class="cmt">// ERROR  =&gt; baja a literal y arma andamiaje (ZDP)</span>
+<span class="add">+     ad.level = 'literal';   ad.pendingHint = true;   // baja</span>
+<span class="add">+     fb.innerHTML = '↳ Reorientemos la lectura. '+</span>
+<span class="add">+       'Volvé al texto y buscá el dato antes de inferir.';</span>
+<span class="ctx">  }</span></pre>
+  </div>
+  <p class="diff-cap">Rama <strong>adaptativo</strong> · 1 archivo modificado · +107 / −17 líneas</p>
+
+  <div class="section-title">El recorrido se adapta a cada grupo</div>
+  <p class="section-sub">Dos grupos distintos, dos caminos distintos por la misma sala. Eso es lo que la versión original no podía hacer.</p>
+
+  <div class="sim">
+    <h4>Grupo A — lee con seguridad (todo acierto)</h4>
+    <div class="trace">
+      <div class="row"><span class="lvl lit">literal</span> <span class="res ok">✓ acierta</span> <span style="color:#5b6f68">→ el sistema sube el nivel</span></div>
+      <div class="row"><span class="lvl inf">inferencia</span> <span class="res ok">✓ acierta</span> <span style="color:#5b6f68">→ sostiene el nivel alto</span></div>
+      <div class="row"><span class="lvl inf">inferencia</span> <span class="res ok">✓ acierta</span> <span style="color:#5b6f68">→ sala resuelta en nivel exigente</span></div>
+    </div>
+    <h4 style="margin-top:20px">Grupo B — necesita andamiaje (erra al inicio)</h4>
+    <div class="trace">
+      <div class="row"><span class="lvl lit">literal</span> <span class="res no">✗ erra</span> <span style="color:#5b6f68">→ baja y ofrece pista</span></div>
+      <div class="row"><span class="lvl lit">literal</span> <span class="res ok">✓ acierta</span> <span style="color:#5b6f68">→ consolida, vuelve a subir</span></div>
+      <div class="row"><span class="lvl inf">inferencia</span> <span class="res ok">✓ acierta</span> <span style="color:#5b6f68">→ llega a la inferencia con apoyo previo</span></div>
+    </div>
+  </div>
+
+  <footer>
+    Escape Room interactivo · <a href="https://plumas.pages.dev">plumas.pages.dev</a> · Repo: <a href="https://github.com/mercedesrecalde-webdesign/plumas">github.com/mercedesrecalde-webdesign/plumas</a><br>
+    <em>El almohadón de plumas</em> · Horacio Quiroga, 1907 (dominio público) · Ambiente sonoro y arte generados sin material con copyright<br>
+    Anexo de la Actividad Obligatoria 2 — María Mercedes Recalde
+  </footer>
+
+</div>
+</body>
+</html>
