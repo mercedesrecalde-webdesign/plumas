@@ -170,25 +170,7 @@
     </div>
   </div>
 
-  <div class="section-title">El cambio, en el código real</div>
-  <p class="section-sub">El fragmento que convierte una respuesta en una decisión de nivel. La lógica nueva sumó alrededor de 100 líneas sin tocar lo que ya funcionaba: cerraduras, dossier de personajes y ambiente sonoro quedaron intactos.</p>
-
-  <div class="diff">
-<pre><span class="cmt">// ACIERTO  =&gt; sube el nivel hacia inferencial</span>
-<span class="add">+   if(oi===ch.correct){</span>
-<span class="add">+     solved.add(ci); sfx('ok');</span>
-<span class="add">+     ad.level = 'infer';                       // sube</span>
-<span class="add">+     setTimeout(()=&gt;serveNextChallenge(roomId), 1100);</span>
-<span class="ctx">  } else {</span>
-<span class="cmt">// ERROR  =&gt; baja a literal y arma andamiaje (ZDP)</span>
-<span class="add">+     ad.level = 'literal';   ad.pendingHint = true;   // baja</span>
-<span class="add">+     fb.innerHTML = '↳ Reorientemos la lectura. '+</span>
-<span class="add">+       'Volvé al texto y buscá el dato antes de inferir.';</span>
-<span class="ctx">  }</span></pre>
-  </div>
-  <p class="diff-cap">Rama <strong>adaptativo</strong> · 1 archivo modificado · +107 / −17 líneas</p>
-
-  <div class="section-title">El recorrido se adapta a cada grupo</div>
+    <div class="section-title">El recorrido se adapta a cada grupo</div>
   <p class="section-sub">Dos grupos distintos, dos caminos distintos por la misma sala. Eso es lo que la versión original no podía hacer.</p>
 
   <div class="sim">
