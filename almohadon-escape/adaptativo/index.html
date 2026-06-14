@@ -253,6 +253,19 @@
     .manuscript p{font-size:1.14rem}.monologue{font-size:1.16rem;padding:18px}
     #topbar{gap:9px;padding:10px 12px}.tb-btn{padding:6px 9px;font-size:.72rem}.codebox input{width:46px;height:54px;font-size:1.6rem}
   }
+
+  .level-toast{ position:fixed; left:50%; top:22%; transform:translate(-50%,-30px);
+    z-index:9999; padding:18px 30px; border-radius:16px; font-family:'Spectral',serif;
+    font-size:1.15rem; text-align:center; max-width:88vw; pointer-events:none;
+    opacity:0; transition:opacity .45s ease, transform .45s ease;
+    box-shadow:0 18px 50px rgba(0,0,0,.55); border:1px solid rgba(255,255,255,.18); }
+  .level-toast.show{ opacity:1; transform:translate(-50%,0); }
+  .level-toast b{ font-weight:700; }
+  .level-toast.lt-up{ background:linear-gradient(135deg,#0e3d30,#13684f); color:#d8ffe9; border-color:rgba(16,185,129,.6); }
+  .level-toast.lt-down{ background:linear-gradient(135deg,#1b2f44,#244a6b); color:#dbeeff; border-color:rgba(143,199,234,.55); }
+  .adaptive-prog{ font-size:.92rem; padding:6px 0 4px; }
+  .adaptive-prog .ap-level{ font-size:1.2rem; padding:3px 16px; font-weight:600; }
+
 </style>
 </head>
 <body>
@@ -437,13 +450,15 @@ const ROOMS = [
   {
     id:0, who:"Alicia & Jordán", name:"Los retratos", chip:"Sala I · El umbral", art:"pareja",
     mono:{who:"El narrador", text:"“Rubia, angelical y tímida… Él, por su parte, la amaba profundamente, sin darlo a conocer.” Dos personas, dos temperaturas. Antes de avanzar, mírales bien el rostro."},
-    intro:"Para cruzar el umbral, demuestra que conoces a quienes habitan esta casa.",
+    intro:"Para cruzar el umbral, demuestra que conoces a quienes habitan esta casa. Los números aparecen en orden: anótalos tal como salen.",
     challenges:[
       {q:"¿Con qué tres rasgos presenta el narrador a Alicia?", kind:"literal", opts:["Rubia, angelical y tímida","Morena, alegre y audaz","Pálida, severa y fría","Rubia, soñadora y rebelde"], correct:0, digit:"3", fb:"Esos tres adjetivos dibujan su fragilidad y su dulzura: la víctima perfecta."},
       {q:"¿Qué rasgo de Jordán “heló las soñadas niñerías de novia” de Alicia?", kind:"literal", opts:["Su pobreza","Su carácter duro","Su edad","Sus celos"], correct:1, digit:"7", fb:"Su dureza es lo primero que enfría el sueño romántico de ella."},
-      {q:"El amor de Jordán por Alicia era profundo, pero tenía una particularidad. ¿Cuál?", kind:"infer", hint:"Releé la frase “la amaba profundamente, sin darlo a conocer”. La clave está en esas tres últimas palabras.", opts:["Era falso","No lo daba a conocer","Era interesado","Había desaparecido"], correct:1, digit:"2", fb:"Ama sin mostrarlo: toda la tragedia íntima de la pareja cabe en esa frase."},
+      {q:"El amor de Jordán por Alicia era profundo, pero tenía una particularidad. ¿Cuál?", kind:"literal", opts:["Era falso","No lo daba a conocer","Era interesado","Había desaparecido"], correct:1, digit:"2", fb:"Ama sin mostrarlo: toda la tragedia íntima de la pareja cabe en esa frase."},
+      {q:"Alicia lo quería, pero al mirarlo sentía “un ligero estremecimiento”. ¿Qué nos dice ese estremecimiento sobre cómo se sentía a su lado?", kind:"infer", hint:"Pensá qué se siente amar a alguien y a la vez no sentirse del todo en confianza con él.", opts:["Que su amor convivía con un miedo callado","Que estaba aburrida","Que no lo quería","Que tenía frío"], correct:0, fb:"Su amor nunca fue del todo cálido: convivía con un temor sordo, una distancia que la enfriaba por dentro."},
+      {q:"El narrador llama a la luna de miel “un largo escalofrío”. ¿Qué experiencia emocional condensa esa imagen?", kind:"infer", hint:"Un escalofrío no es calor de hogar: ¿qué pasa con la ilusión del amor en esta pareja?", opts:["La ilusión del amor enfriándose en soledad desde el principio","Una fiesta alegre","Un viaje divertido","Un romance apasionado"], correct:0, fb:"Desde el inicio, lo que debía ser calidez es frío: el matrimonio nace ya teñido de soledad."}
     ],
-    lock:{type:"num", len:3, code:"372", hint:"Tres respuestas, tres dígitos: arma la combinación."},
+    lock:{type:"num", len:3, code:"372", hint:"Tres respuestas con número, en el orden en que aparecen: arma la combinación."},
     reveal:["alicia","jordan"], revealNote:"perfil"
   },
   {
@@ -452,9 +467,10 @@ const ROOMS = [
     intro:"Esta sala solo se abre con una palabra: la emoción que define el mundo interior de Alicia. Respóndelo todo y la palabra se revelará.",
     challenges:[
       {q:"Según el texto, ¿cómo era el carácter de Jordán que “heló” los sueños de novia de Alicia?", kind:"literal", opts:["Cálido y conversador","Duro, encerrado en sí mismo","Alegre y despreocupado","Tímido y dulce"], correct:1, fb:"El narrador lo describe duro y replegado: ese temple marca toda la convivencia."},
-      {q:"Cuando Alicia echa una “furtiva mirada” a Jordán y siente un “estremecimiento”, ¿qué emoción se mezcla con su amor?", kind:"infer", opts:["Un temor reverencial hacia él","Aburrimiento","Odio","Indiferencia total"], correct:0, fb:"Lo ama y lo teme a la vez: una intimidad incómoda, nunca del todo cálida."},
-      {q:"Que Alicia “echara un velo sobre sus antiguos sueños” significa que…", kind:"infer", opts:["Olvidó dónde vivía","Renunció a sus ilusiones de novia para soportar su realidad","Decoró la casa","Se fue de viaje"], correct:1, fb:"Renuncia a soñar para no sufrir: una forma silenciosa de resignación."},
-      {q:"Su “espanto callado”, que estalla en llanto ante una simple caricia, revela que Alicia se sentía sobre todo…", kind:"infer", opts:["Furiosa","Profundamente sola y conteniendo su angustia","Enamorada y feliz","Culpable"], correct:1, fb:"Tanta emoción contenida se desborda al primer gesto de ternura: estaba sola por dentro."},
+      {q:"Alicia adelgaza y se apaga “sin que él lo notara a tiempo”. Ponte en su lugar: ¿qué sentía al irse marchitando sin que nadie lo viera?", kind:"infer", hint:"No es solo tristeza física: ¿qué se siente sufrir y que nadie te mire?", opts:["La soledad de sufrir sin ser mirada","Alegría","Enojo con la sirvienta","Ganas de viajar"], correct:0, fb:"Su dolor es invisible para el único que podría acompañarla: se apaga en una soledad absoluta."},
+      {q:"“Echó un velo sobre sus antiguos sueños.” ¿Qué renuncia emocional hace Alicia para poder sobrevivir en esa casa?", kind:"infer", hint:"¿Qué tiene que dejar de lado para no sufrir todo el tiempo?", opts:["Resignar sus ilusiones para soportar su realidad","Comprar muebles nuevos","Aprender a cocinar","Salir a pasear"], correct:0, fb:"Renuncia a soñar para no sufrir: una forma silenciosa, casi invisible, de resignación."},
+      {q:"Su “espanto callado” estalla en llanto ante una sola caricia de Jordán. ¿Por qué un gesto tierno la quiebra de esa manera?", kind:"infer", hint:"Si un solo gesto de cariño te hace llorar, ¿de qué venías cargando?", opts:["Porque revela cuánta ternura le faltaba","Porque le dolió físicamente","Porque estaba enojada","Porque tenía miedo de él"], correct:0, fb:"Tanta emoción contenida se desborda al primer gesto de cariño: estaba hambrienta de ternura."},
+      {q:"Mirando toda su historia, ¿cuál es la emoción que mejor define la vida interior de Alicia en esta casa?", kind:"infer", hint:"Una sola palabra de siete letras resume todo lo que sintió.", opts:["La soledad","La furia","La alegría","La envidia"], correct:0, fb:"Sola aun estando acompañada: esa es la palabra que abre esta puerta."}
     ],
     lock:{type:"word", len:7, code:"SOLEDAD", hint:"Siete letras. La emoción que la habitaba aun estando casada. (Las respuestas correctas te la dictan al oído.)"},
     reveal:["alicia"], revealNote:"interior"
@@ -465,9 +481,10 @@ const ROOMS = [
     intro:"Detrás de su dureza hay un hombre que no sabe amar en voz alta. Comprende su silencio y la sala cederá.",
     challenges:[
       {q:"¿Qué hacía Jordán, según el texto, mientras Alicia se apagaba en el dormitorio?", kind:"literal", opts:["Salía de la casa","Paseaba sin cesar de un extremo a otro de la sala","Dormía a su lado","Escribía cartas"], correct:1, fb:"Camina sin parar: su cuerpo descarga la angustia que las palabras no encuentran."},
-      {q:"La frase “la amaba profundamente, sin darlo a conocer” sugiere que la dureza de Jordán es…", kind:"infer", opts:["Falta de amor","Una coraza que esconde sus sentimientos","Una enfermedad","Una actuación para los demás"], correct:1, fb:"Su frialdad no niega el amor: lo oculta. La coraza es el problema, no la ausencia de sentimiento."},
-      {q:"Cuando le pasa lento la mano por la cabeza y ella rompe a llorar, ese gesto raro muestra que Jordán…", kind:"infer", opts:["Quería hacerle daño","Sí siente ternura, aunque casi nunca la expresa","Se despedía para siempre","Estaba distraído"], correct:1, fb:"Un solo gesto tierno basta para desbordarla: revela todo lo que él suele callar."},
-      {q:"“¡Sólo eso me faltaba!” y el tamborileo brusco sobre la mesa expresan en Jordán, ante la muerte de Alicia…", kind:"infer", opts:["Alivio","Impotencia y angustia contenida","Enojo con los médicos","Indiferencia"], correct:1, fb:"No grita su dolor: lo descarga en un golpe seco. Es desesperación que no encuentra palabras."},
+      {q:"Jordán “la amaba profundamente, sin darlo a conocer”. ¿Qué le pasa a alguien que ama de verdad pero no sabe mostrarlo?", kind:"infer", hint:"Si el amor existe pero nunca se expresa, ¿qué efecto tiene sobre los dos?", opts:["Su amor se vuelve una coraza que los aísla a ambos","Deja de querer a la otra persona","Se vuelve violento","Se enamora de otra"], correct:0, fb:"El amor que no se dice no abriga: se convierte en una coraza que termina aislándolos a los dos."},
+      {q:"Le pasa lento la mano por la cabeza y ella rompe a llorar. En ese instante mudo, ¿qué siente cada uno?", kind:"infer", hint:"Pensá en los dos a la vez: lo que él logra mostrar y lo que ella venía conteniendo.", opts:["Él, ternura que no sabe decir; ella, todo lo que le faltaba","Él, fastidio; ella, miedo","Los dos, indiferencia","Él, despedida; ella, alivio"], correct:0, fb:"Un único gesto tierno condensa el amor callado de él y revela el vacío afectivo de ella."},
+      {q:"“¡Sólo eso me faltaba!” y el tamborileo brusco sobre la mesa. ¿Qué emoción esconde Jordán detrás de esa frialdad?", kind:"infer", hint:"No grita ni llora: ¿qué hay debajo de ese golpe seco en la mesa?", opts:["Impotencia y angustia contenida","Alivio por su muerte","Enojo con los médicos","Total indiferencia"], correct:0, fb:"No grita su dolor: lo descarga en un golpe seco. Es desesperación que no encuentra palabras."},
+      {q:"Mirando todo su comportamiento, ¿cuál es el sentimiento que Jordán tenía pero nunca supo mostrar?", kind:"infer", hint:"Una palabra de siete letras nombra eso que él sentía y callaba.", opts:["La ternura","El rencor","El desprecio","La envidia"], correct:0, fb:"Sentía ternura y no sabía darla: esa es la palabra que abre esta puerta."}
     ],
     lock:{type:"word", len:7, code:"TERNURA", hint:"Siete letras. Aquello que Jordán sentía pero no sabía mostrar."},
     reveal:["jordan"], revealNote:"interior"
@@ -475,28 +492,30 @@ const ROOMS = [
   {
     id:3, who:"Alicia", name:"El dormitorio del terror", chip:"Sala IV · La agonía", art:"dormitorio",
     mono:{who:"Alicia, enferma", text:"“No puedo levantarme. Hay algo en la alfombra que me mira. Por la noche el peso me aplasta, un millón de kilos sobre el pecho, y no logro gritar. Que nadie toque mi cama. Que nadie toque mi almohadón.”"},
-    intro:"Aquí Alicia se apaga entre alucinaciones. Reconoce qué siente y qué ve, y la cerradura cederá.",
+    intro:"Aquí Alicia se apaga entre alucinaciones. Reconoce qué ve y qué siente; los números aparecen en orden, anótalos tal como salen.",
     challenges:[
       {q:"¿Sobre qué fijaba Alicia los ojos, rígida de espanto, durante sus alucinaciones?", kind:"literal", opts:["La ventana","La alfombra","El techo","La puerta"], correct:1, digit:"5", fb:"Mira la alfombra “a ras del suelo”: ahí cree ver acercarse el horror."},
       {q:"¿Qué criatura imaginó apoyada en la alfombra, con los ojos fijos en ella?", kind:"literal", opts:["Una serpiente","Un antropoide","Un perro","Un pájaro"], correct:1, digit:"1", fb:"El “antropoide” imaginado anticipa, sin que ella lo sepa, a la criatura real del almohadón."},
       {q:"¿Qué sensación física la dominaba al despertar?", kind:"literal", opts:["Frío en los pies","Estar desplomada con un peso enorme encima","Hambre","Picazón en las manos"], correct:1, digit:"4", fb:"“Un millón de kilos encima”: su cuerpo, vaciado de sangre, ya no responde."},
-      {q:"Su terror de no poder moverse ni gritar transmite, sobre todo, una sensación de…", kind:"infer", opts:["Indefensión absoluta","Tranquilidad","Esperanza","Culpa"], correct:0, fb:"Atrapada y muda: la indefensión total es el corazón del terror en esta escena."},
+      {q:"No poder moverse ni gritar mientras algo la observa. ¿Qué vivencia emocional encarna ese terror?", kind:"infer", hint:"Imaginá estar consciente, amenazada, y no poder defenderte ni pedir ayuda.", opts:["La indefensión absoluta de quien se consume sin que nadie lo vea","Una pesadilla divertida","Tranquilidad","Esperanza de salvarse"], correct:0, fb:"Atrapada, muda e inmóvil mientras algo la acecha: la indefensión total es el corazón del terror."},
+      {q:"Sus alucinaciones son siempre figuras inmóviles que la miran fijo. ¿Por qué da más miedo lo que observa sin moverse?", kind:"infer", hint:"¿Qué es más inquietante: algo que ataca, o algo que solo te mira y espera?", opts:["Porque es una amenaza silenciosa que acecha sin que pueda defenderse","Porque hace ruido","Porque se acerca corriendo","Porque le habla"], correct:0, fb:"Lo que observa quieto y paciente encarna el peligro real: el que la vacía en silencio, noche tras noche."}
     ],
-    lock:{type:"num", len:3, code:"514", hint:"Tres de tus respuestas esconden un dígito. Ese es el código."},
+    lock:{type:"num", len:3, code:"514", hint:"Tres respuestas con número, en el orden en que aparecen: ese es el código."},
     reveal:["alicia"], revealNote:"agonia"
   },
   {
     id:4, who:"La sirvienta", name:"El descubrimiento", chip:"Sala V · La verdad", art:"descubrimiento",
     mono:{who:"La sirvienta", text:"“Solo quería deshacer la cama. Pero el almohadón tenía manchas… y pesaba como si guardara una piedra viva dentro. Cuando lo abrieron a la luz, grité. Dios mío, lo que había ahí adentro.”"},
-    intro:"La última puerta exige la verdad completa: qué pasó realmente en esta casa.",
+    intro:"La última puerta exige la verdad completa: qué pasó realmente en esta casa, y qué significa.",
     challenges:[
       {q:"¿Dónde estaban exactamente las manchas de sangre del almohadón?", kind:"literal", opts:["En el centro","A ambos lados del hueco de la cabeza","En las cuatro esquinas","Debajo de la funda"], correct:1, fb:"“A ambos lados de la cabeza”: justo donde algo se alimentaba de sus sienes."},
       {q:"¿Qué se acababa de descubrir dentro del almohadón?", kind:"literal", opts:["Plumas mojadas","Un parásito monstruoso, una bola viviente y viscosa","Una carta","Un nido de pájaros"], correct:1, fb:"El monstruo era real: un parásito de las aves agigantado por la sangre humana."},
-      {q:"¿Por qué la succión se volvió “vertiginosa” en los últimos días?", kind:"infer", opts:["Porque cambió el clima","Porque Alicia, inmóvil, ya no dejaba mover ni tocar el almohadón","Porque Jordán lo descuidó","Porque la sirvienta lo movió"], correct:1, fb:"Antes, mover el almohadón frenaba al parásito; al quedar ella inmóvil, nada lo detuvo."},
+      {q:"El monstruo vivía en su propia cama y la vaciaba cada noche. ¿Qué hace tan perturbador que el horror estuviera en lo más íntimo?", kind:"infer", hint:"La cama es el lugar donde uno se siente más seguro. ¿Qué pasa si ahí está el peligro?", opts:["Que el peligro habitaba lo cotidiano y nadie lo vio a tiempo","Que el monstruo era pequeño","Que la casa era grande","Que Jordán dormía mal"], correct:0, fb:"El espanto final es que la amenaza vivía en el rincón más íntimo y doméstico, a plena vista y sin embargo invisible."},
+      {q:"Alicia se desangró sola, de noche, sin que nadie entendiera qué pasaba. Mirando todo el cuento, ¿de qué fue víctima además del parásito?", kind:"infer", hint:"Pensá en cómo vivió: incomprendida, callada, mirada por nadie. ¿Qué más la mató?", opts:["Del silencio y la soledad en la que vivió","De la pobreza","Del clima frío","De su propia imaginación"], correct:0, fb:"El parásito la desangró, pero la soledad y el silencio de esa casa la habían vaciado mucho antes."}
     ],
     lock:{type:"word", len:8, code:"PARASITO", hint:"Ocho letras. El nombre de lo que vivía entre las plumas y vació a Alicia."},
     reveal:["sirvienta"], revealNote:"interior"
-  },
+  }
 ];
 
 /* ============================================================
@@ -823,19 +842,33 @@ function answerChallenge(roomId,ci,oi,btn,div){
     const fb=div.querySelector('.ch-fb'); fb.textContent='↳ '+ch.fb; fb.classList.add('show');
     if(ch.digit){ div.querySelector('.ch-q span:last-child').insertAdjacentHTML('beforeend',`<span class="digit-reveal">→ ${ch.digit}</span>`); }
     // ACIERTO => sube el nivel hacia inferencial
-    ad.level='infer';
+    const prev=ad.level; ad.level='infer';
+    if(prev!=='infer') showLevelToast('up');
     renderAdaptiveProgress(roomId); renderLock(r,roomId); updateRoomStatus(roomId);
     setTimeout(()=>serveNextChallenge(roomId), 1100);
   } else {
     btn.classList.add('wrong'); btn.disabled=true; sfx('err');
     // ERROR => baja el nivel a literal y arma andamiaje
-    ad.level='literal'; ad.pendingHint=true;
+    const prevE=ad.level; ad.level='literal'; ad.pendingHint=true;
+    if(prevE!=='literal') showLevelToast('down'); else showLevelToast('stay');
     const fb=div.querySelector('.ch-fb');
     fb.innerHTML='↳ <em>Reorientemos la lectura.</em> Bajamos un escalón: volvé al texto y buscá el dato antes de inferir.';
     fb.classList.add('show','scaffold-msg');
     renderAdaptiveProgress(roomId);
     setTimeout(()=>{ div.classList.remove('active'); div.style.opacity=.45; serveNextChallenge(roomId); }, 1700);
   }
+}
+function showLevelToast(dir){
+  let t=document.getElementById('levelToast');
+  if(!t){ t=document.createElement('div'); t.id='levelToast'; document.body.appendChild(t); }
+  let txt, cls;
+  if(dir==='up'){ txt='\u2B06\uFE0F SUBISTE DE NIVEL &middot; ahora va una pregunta de <b>INFERENCIA</b>'; cls='lt-up'; }
+  else if(dir==='down'){ txt='\u2B07\uFE0F BAJAMOS UN ESCAL\u00d3N &middot; volvemos a <b>COMPRENSI\u00d3N LITERAL</b> con una pista'; cls='lt-down'; }
+  else { txt='\u27F3 SEGUIMOS EN <b>COMPRENSI\u00d3N LITERAL</b> &middot; volv\u00e9 al texto'; cls='lt-down'; }
+  t.className='level-toast '+cls; t.innerHTML=txt;
+  t.classList.remove('show'); void t.offsetWidth; t.classList.add('show');
+  clearTimeout(window.__ltTimer);
+  window.__ltTimer=setTimeout(()=>t.classList.remove('show'), 2600);
 }
 function renderAdaptiveProgress(roomId){
   const r=ROOMS[roomId]; const solved=state.solvedChallenges[roomId];
@@ -848,8 +881,9 @@ function renderAdaptiveProgress(roomId){
   }
   const total=r.challenges.length, done=solved.size;
   const lvlTxt = ad.level==='infer' ? 'Inferencia / Empatía' : 'Comprensión literal';
-  el.innerHTML=`<span class="ap-label">Nivel actual:</span> <span class="ap-level ${ad.level}">${lvlTxt}</span>`+
-               `<span class="ap-count">${done}/${total} resueltos</span>`;
+  const arrow = ad.level==='infer' ? '\u2B06' : '\u25C9';
+  el.innerHTML=`<span class="ap-label">Tu nivel ahora:</span> <span class="ap-level ${ad.level}">${arrow} ${lvlTxt}</span>`+
+               `<span class="ap-count">${done}/${total} resueltos en esta sala</span>`;
 }
 function updateRoomStatus(roomId){
   const r=ROOMS[roomId]; const solved=state.solvedChallenges[roomId];
